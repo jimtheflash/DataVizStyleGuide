@@ -1,0 +1,487 @@
+---
+title: "Data Visualization Style Guide"
+author: "Jim Kloet"
+date: "`r Sys.Date()`"
+output: 
+ html_document:
+   code_folding: show
+   toc: TRUE
+   toc_float: TRUE
+   toc_depth: 5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      error = FALSE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.height = 3.5,
+                      fig.width = 6)
+
+# TODO: explicitly call every function and remove library call
+library(tidyverse)
+library(directlabels)
+```
+
+******
+
+# Overview
+
+This style guide was created as an open source, free-to-use-for-any-purpose document, with the goal of helping users and organizations improve their data visualization and communication practices. Please feel free to use this as-is, or as a starting point for a personal or organizational style guide.
+
+This guide was modeled after the [Consumer Financial Protection Bureau (CFPB) Data Visualization Style Guide](https://cfpb.github.io/design-manual/data-visualization/data-visualization.html). Materials will be cited Additional resources are listed in the [Resources](#Resources) section.
+
+I've elected to create this guide using `R` and `RMarkdown` based on my current skillset and preferred tools (e.g. `ggplot2` and `plotly` for creating visualizations, and `RStudio PBC` as my IDE). Please feel free to port these materials over to any format you'd like.
+
+### Organization
+
+This guide is organized into the following sections:
+
+* _**Accessibility:**_ Data visualization should be accessible to everyone in your audience. This section contains suggestions to accomplish that.
+
+* _**Accuracy:**_ Accurate data visualization can enlighten and inspire; inaccurate data visualization can lead to misinformation and bad decisions. This section provides approaches to ensure that your data visualization is as accurate as possible.
+
+* _**Audience:**_ When designing data visualization, the audience should drive decision-making. This section contains important questions and considerations for ensuring that your audience accurately extracts information from visualizations.
+
+* _**Colors and fonts:**_ Color and font choices can significantly impact how your audience perceives your data visualization. This section has suggestions for both.
+
+* _**Data visualization components:**_ Data visualizations are made of many pieces, each of which should be aligned with your goals. This section contains typical components of a visualization and suggestions for styling them.
+
+* _**Data visualization types:**_ Types of data, audience, and message all influence the type of data visualization you should choose. This section has suggestions on best practices for choosing a data visualization.
+
+* _**Emphasis and message:**_ The purpose of data visualization is to communicate information. This section contains guidance on designing your data visualization to emphasize the message you want your audience to take away from your work.
+
+* _**Dashboard Design:**_ Dashboards are a common use case for data visualizations. This section proposes best practices for designing dashboards.
+
+* _**Resources:**_ This section contains links to additional resources for best practices around developing data visualizations.
+
+******
+
+# Accessibility {#accessibility}
+
+Your audience may include people who are blind, deaf, or have sensory processing deficits. Some of your audience may use a screen reader or other tools to enable them to access your content. There are specific steps you can take to ensure that your data visualization is accessible to your audience.
+
+Many of the specific recommendations come directly from the World Wide Web Consortium's [Web Content Accessibility Guidelines (WCAG) 2.1](https://www.w3.org/TR/WCAG/#abstract).
+
+ Cole Nussbaumer Knaflic also wrote an [excellent article](http://www.storytellingwithdata.com/blog/2018/6/26/accessible-data-viz-is-better-data-viz) about accessible data visualization, and why it should matter.
+
+### Descriptive Title
+
+Your data visualization should have a title, which clearly describes the content, e.g. "Average Count of Widgets By Day Across Several Cities". A subtitle can also be employed to provide additional information about the data and visualization, like the date range or any filtering criteria used in creating the visualization, e.g. "Cities with >1M residents, 2019-2020."
+
+### Alt Tags
+
+If your visualization is viewed through a screen reader, it can be described in an alt tag. Here are some recommendations for effective alt tags:
+
+* It should be a succint, one- or two-line description of the visualization, e.g. "Pie chart showing results of poll of favorite pies from residents of Chicago."
+
+* It should also contain a link to a machine-readable source data, like a `.csv` or other flat file format.
+
+### Color Accessibility
+
+We know that a significant propoortion of people exhibit some form of color vision deficiency, also known as color blindness, [according to the NIH](https://ghr.nlm.nih.gov/condition/color-vision-deficiency#statistics). Apart from color, we know that people can have a wide range of difficulties perceiving and processing visual stimuli. 
+
+Maximizing color accessibility, i.e. choosing colors with the goal of enabling your audience to perceive meaningful differences in your data visualization,  ensures that your data visualization will be as effective as possible. To maximize color accessibility: 
+
+* Avoid encoding information solely using color; color can be combined with another element, e.g. shape or line type.
+
+* Use direct labels, rather than color-coded legends, whenever possible.
+
+* Employ a color palette that accommodates color vision deficiency; see the [Colors And Fonts](#colors) section for more details on specific palette recommendations.
+
+* Choose colors with a minimum contrast ratio of at least **3:1** against adjacent colors ([WCAG non-text contrast success criterion](https://www.w3.org/TR/WCAG/#non-text-contrast)).
+
+### Type Accessibility
+
+In addition to color, visual perception and processing deficits can lead to difficulties with text in your data visualization. The following suggestions are directly from the [WCAG contrast enhanced success criterion](https://www.w3.org/TR/WCAG/#contrast-enhanced).
+
+* Use contrast ratio of at least **7:1** when presenting regular text.
+
+* large-scale text and images of large-scale text should have a contrast ratio of at least **4.5:1**.
+
+* Logotypes (i.e. text in logos) have no contrast requirements. 
+
+******
+
+# Accuracy {#accuracy}
+
+Accuracy is critical in data visualization. If the data used to create your visualization are imprecise or incorrect, it could lead your audience to make bad decisions, which could have disastrous consequences. The following suggestions can help to ensure that your data visualization is as accurate as possible:
+
+* Review your work with _at least_ one additional person, who is ideally a subject-matter expert in the thing you're trying to visualize. You should review the end-result visualization, as well as any code used to pull data or create the visualization. This review should be documented, and should function as a necessary checkpoint before sharing your visualization with a broader audience.
+
+* Make sure that you've shared as much context as necessary along with your visualization. This can include
+
+* Provide a link or citation to the data used in your visualization. First, this ensures that you know the origins of the data underlying your visualization. Second, it gives your audience an opportunity to vet the data themselves, which can uncover issues that might not have surfaced in previous reviews.
+
+* Make calculations in your visualization as transparent as possible. If you're visualizing a rate, for instance, including details about the numerator and denominator in the caption might help to alleviate any confusion 
+
+******
+
+# Audience {#audience}
+
+It is impossible to communicate effectively without considering your audience. Obviously, you would not write an article in Latin intended for an audience who does not know Latin. In the same way, you need to tailor your data visualization to the expectations, strengths, and limitations of your audience.
+
+### Background Knowledge
+
+There are several facets of your audience's background knowledge (that is, what knowledge they possess before they're presented with your data visualization) that influences their ability to perceive and extract information from your data visualization:
+
+* Your audience may have a wide range of experience with statistics, from "no formal training but consumes a lot of cable news!" to "colleagues with a better grasp of statistics than you" to "executives who believe they understand the difference between mean and median but...do not" and really anything else that could be fairly considered a way to classify experience. This is especially true if your audience is any form of social media!
+
+  + You should always use an appropriate statistical methodology for your data visualization, but be cognizant that additional explanation may be required for concepts that your audience may not be aware of, or may be aware of but still hold some confusion. 
+  
+  + You know your audience better than I do, and presumably know the correct way to measure the thing that you are trying to visualize, but for the sake of providing guidance for generic situations, it is advisable to use scales and statistics familiar to audiences with a high school education.
+
+* Even if your audience has equall and sufficient experience to understand how information in the visualization is being measured, there can still be variability in their understanding of data collection and storage processes, and any associate jargon. This can be especially important when working with data that have missingness, e.g. data missing from a range of dates.
+
+* Finally, your audience could be fully literate with both statistics and data management, but still vary in their understanding of and ability to extract information from data visualizations. This can be for a wide variety of reasons, but one should not assume, for example, that an audience of machine learning experts or data warehousing engineers are also able to parse a complex or novel data visualization without additional clarification.
+
+### Expectations
+
+Your audience's expectations influence the way they perceive your data visualization, before they've even seen it! By considering the expectations of your audience, you can design your visualization to minimize the likelihood that your audience misperceives or misinterprets it.
+
+* Larger values of a variable are generally presented above lower values on a vertical axis, e.g. a value "3.5" would be visually reprsented as being above a value "3.4", which would be above "3.3", etc. Your audience expects this to be the case. If your visualization has a good reason to invert that scale - for instance, if you are plotting a rank, where lower ranks values are better, it may be reasonable plot lower ranks as higher - make sure to clearly identify this in your visualization's title or subtitle, as well as clearly labeling your axis.
+
+* In many cultures, the perception of time aligns with the direction that text is read. As such, in native English speaking cultures, your audience likely expects that dates or times on the left side of a visualization precede dates or times on the right side of a visualization. To accommodate this, your visualization should increment time from left to right whenever possible, or from top to bottom (which also aligns with reading direction) if you need to use a vertical axis.
+
+* Some visualization types have been used significantly more frequently than others, which will influence the facility with which your audience extracts information from your visualization. For example, it is likely that there have been more bar charts published over the course of time than tree graphs, or even boxplots, and as such, there's a greater chance that your audience have been exposed to a bar chart than those other chart types. This is not a case against novel or less-utilized chart types; rather, this is to suggest that you should consider this information when choosing your visualization type. When a simpler visualization communicates your message as effectively as a more complex visualization, the simpler option would be preferred.
+
+******
+
+# Colors {#colors}
+
+Color must be carefully considered when designing data visualizations. Color palettes can have a significant effect on accessibility (see [Accessibility](#accessibility)), which impacts your audience's ability to get any value from your visualization. Color also evokes psychological responses (TKTKTK). It is no wonder that color palettes are often significantly associated with specific brands!
+
+You will need to consider a few things when choosing a color palette:
+
+* Ensure that your color palette is accessible to your audience - this means using a palette that accommodates color vision deficiencies, and also using a palette with sufficient contrast and perceptible differences between colors.
+  + The "minimal perceptible difference" between colors is SOME NUMBER TKTK specified in ACCESSIBILITY GUIDE TKTK
+  + The `paleval` `R` package can provide you with specific details on your color palette TKTK
+
+* Does your organization already have a color palette that you should adapt or adopt? This might be maintained by designers on a marketing or branding division within your organization. You should check!
+  + If your organization does have a preferred color palette, you should investigate if it is a good palette for data visualization. If it isn't, then you might consider partnering with the folks who maintain the existing palette to make revisions.
+
+* Will your audience be printing your data visualization? If so, you might consider using a grayscale color palette with white backgrounds, to ensure that your work looks as expected when it is copied and shared.
+
+* Are you using a very broad range of, or precise set of colors? Some older displays or projectors may have difficulties displaying your colors correctly. If it's possible that your data visualization will be displayed on older equipment, consider using a grayscale color palette, or a simplified set of colors.
+
+### Primary Color Palette
+
+Your primary colors are the colors you will use in most of your visualizations.
+
+### Secondary Color Palettes
+
+Here are some additional palettes to consider in certain situations.
+
+
+#### Grayscale
+
+A grayscale color palette is useful when you know your visualizations will be distributed in grayscale, e.g. from a photocopier.
+
+If you choose to use the palette I've selected below (`RColorBrewer::Greys`) then you'll obviously want to ensure that you're not using a color that is the same as your background, e.g. don't use white on a white background. That might be a good reason to use a different method for encoding groups, like a line pattern.
+
+``` {r grayscale}
+plot(paletteer::paletteer_d("RColorBrewer::Greys"))
+```
+
+#### Viridis
+
+There are several continuous color palettes There several ways to access the `viridis` family of color palettes, which was adapted from the palettes in `Matplotlib`, which were themselves adapted from somebody else (but the link on the `Matplotlib` site is broken).
+
+``` {r viridisscale}
+plot(paletteer::paletteer_c("viridis::viridis", 1000))
+```
+
+******
+
+# Data Visualization Components {#dataviz_components}
+
+Using the appropriate font not only increases consistency with the core brand, but assures legibility and good visual hierarchy. Proper labeling and titles help users quickly understand the chart and increases comprehension as well as helping with accessibility.
+
+******
+
+# Data Visualization Types {#dataviz_types}
+
+There are myriad different types of data visualizations. Choosing the best type of data visualization Your decision to choose a particular data visualization should be driven by several factors, including:
+
+* The data! Some visualizations are more appropriate for specific data types than others. For example, line graphs are especially well-suited for visualizing trends over time, whereas pie graphs are not.
+
+* Your audience (see the [Audience](#audience) section for more details). The people consuming your visualization have expectations about what they're going to see, even before you show them anything. Complex or esoteric chart types might be less appropriate for broader audiences (e.g. social media).
+
+* The medium or platform for sharing your visualization.
+
+* Your message.
+
+As such, this section is going to be organized a few different ways: by visualization type as a reference, but also by application data type, by audience, by medium, and by message.
+
+### Visualization Types: Reference
+
+This is the reference guide for different types of data visualizations. The following sections are roughly sorted by how often you'll use them, which is just my opinion. If you have data about which visualization types are used most frequently, that might lead you to sort the list differently.
+
+#### Line Graphs
+
+Line graphs are used to show relationships between 2-3 variables. The information in line graphs is encoded in at least two dimensions:
+
+* Always a position on a horizontal axis
+* Always a position on a vertical axis
+* Sometimes pattern
+* Sometimes color
+* Sometimes thickness
+
+Here is a typical line graph, plotting some variable `Y` over `Time`: 
+
+``` {r linegraph}
+
+# set the theme for the plots
+theme_set(theme_bw() +
+            theme(plot.subtitle = element_text(face = 'italic')))
+
+# make som data, that we can use again
+ts_data <- tibble(Time = 1:20,
+                  Y = runif(20, min = -1, max = 1))
+
+# make line plot
+line_plot <- ggplot(ts_data, aes(x = Time, y = Y)) +
+  geom_line(size = 1.1) +
+  geom_hline(aes(yintercept = 0), alpha = .5, size = 1.1, linetype = 'dashed') +
+  scale_x_continuous(breaks =seq(2, 20, by = 2)) +
+  labs(title = 'Y Values Over Time', 
+       subtitle = 'Y = 0 represented by dashed line')
+line_plot
+```
+
+A special case of a line graph is a *density plot*, which is a way to visualize distributions of continuous values.
+
+```{r densityplot}
+
+# plot
+ggplot(ts_data, aes(Y)) +
+  geom_density(size = 1.1) +
+  scale_x_continuous(limits = c(-1.5, 1.5)) +
+  labs(title = 'Density of Y Values')
+
+```
+
+Another special case of a line graph is a *parallel coordinates plot*, which is usually used to plot values for several variables for a lot of cases, and more specifically to highlight cases that defy a general trend.
+
+``` {r parallelcoordinateplot, fig.width=7, fig.height=4.5}
+
+# make data
+plot_data <- tibble(case = sample(letters, 20),
+                    Q1 = runif(length(case)) * .95,
+                    Q2 = runif(length(case)) * .95,
+                    Q3 = runif(length(case)) * .95,
+                    Q4 = runif(length(case)) * .95) %>%
+  bind_rows(
+    tibble(case = 'aaa',
+           Q1 = 0,
+           Q2 = .25,
+           Q3 = .5,
+           Q4 = 1)
+  ) %>%
+  pivot_longer(-case) %>%
+  mutate(color_var = if_else(case == 'aaa', 'red', 'not red'))
+
+# plot    
+ggplot(plot_data, aes(x = name, y = value, group = case, color = color_var, 
+                      alpha = color_var, size = color_var, label = case)) +
+  geom_line() +
+  labs(x = NULL, y = "Score", 
+       title = "Scores By Question, By Respondent", subtitle = "each line corresponds to a respondent") +
+  scale_color_manual(values = c('black', 'red')) +
+  scale_alpha_discrete(range = c(.2, 1)) +
+  scale_size_discrete(range = c(1, 2)) +
+  theme(legend.position = 'none') +
+  geom_dl(method=dl.combine(first.points,last.qp))
+  
+```
+
+Parellel coordinates plots are sometimes rendered on a polar (circular) coordinate system, which is referred to as a *radar plot* (or a web plot, or a spider plot). These graphs might not always seem like line graphs, as they're often filled in and can look like angular shapes, but the information to be extracted is still in the heights of the points at their respective categories, not the area inside the shape.
+
+However, we should be extremely cautious about using polar coordinates. The terrific resource [data-to-viz](https://www.data-to-viz.com/) has a whole section of [caveats](https://www.data-to-viz.com/caveat/spider.html) for why to avoid radar/web/spider plots, which include:
+
+* Our brains are not expecting to estimate linear comparisons on a circular plane - we're much better at making those kinds of inferences in Cartesian space.
+
+* There's usually information to be mined in the ordering of values in a bar chart, and that's impossible to extract in polar space.
+
+* Even though you shouldn't try to interpret the area inside the line, you very well might do it automatically, and in the case of charts with several distinct scales, you would potentially be exposing yourself to misleading visual information.
+
+In addition, per the the documentation in `ggplot2::coord_polar()` (which makes curved lines, so we're not actually using it in this case, but for reference):
+
+> _NOTE: Use these plots with caution - polar coordinates has major perceptual problems.  The main point of these examples is to demonstrate how these common plots can be described in the grammar. Use with EXTREME caution._
+
+```{r polarcoordinates, fig.height=6, fig.width=6}
+
+# works a lot better with ggradar::ggradar (else the lines are curved)
+# devtools::install_github("ricardo-bion/ggradar")
+radar_data <- plot_data %>%
+  transmute(group = case,
+            name = name,
+            value = value) %>%
+  pivot_wider(names_from = name,
+              values_from = value) %>%
+  head()
+
+ggradar::ggradar(radar_data, 
+                 gridline.mid.colour = 'grey', group.colours = 'darkgrey') +
+  facet_wrap(~group) +
+  labs(title = "A Plot You Should Not Make") +
+  theme(legend.position = 'none')
+
+```
+
+#### Bar Graphs
+
+Bar graphs encode information using one of:
+
+* Bar height
+* Bar width, if the graph is oriented horizontally
+
+Because of this, bar graphs have the requirement that their ordinate axis (i.e. the axis on which the information is encoded) includes 0 - our visual processing systems jump to incorrect conclusions otherwise. Failing to include 0 on your bar graph axis can lead to very misleading data visualizations, like the following:
+
+``` {r barplot_needszero}
+plot_data <- tibble(X = '',
+                    Y = c(99, 1),
+                    Z = c('Yes', 'No'))
+
+ggplot(plot_data, aes(x = X, y = Y, fill = Z, label = Z)) +
+  geom_bar(position = "stack", stat = "identity", width = .5) +
+  coord_cartesian(ylim = c(98, 100)) +
+  geom_text(aes(y = c(98.5, 99.5)), size = 10) +
+  labs(x = NULL, y = "% Of Graphs",
+       title = "Does Your Bar Graph Need to Include Zero?") +
+  theme(legend.position = 'none',
+        axis.ticks.x = element_blank(),
+        panel.grid.major.x = element_blank())
+```
+
+Here are some reasonable approaches to bar graphs. 
+
+First, if you have long category names, aligning bars horizontally can be useful. In the example below, I've also moved the x-axis value labels to the top of the graph, since it is important information and that's where our attention is initially focused.
+
+```{r horizontalbars}
+plot_data <- tibble(name = c("Senator Benedict Hufflepuffington",
+                             "Madame Gretchen von Quigglebottom",
+                             "The Honorable Jarvis O'Birchwoods"),
+                    value = c(5, 10, 15)) %>%
+  mutate(name = fct_reorder(name, value))
+
+ggplot(plot_data, aes(y = name, x = value)) +
+  geom_bar(stat = 'identity') +
+  scale_x_continuous(position = 'top') +
+  labs(x = NULL, y = NULL,
+       title = "Arbitrary Values By Invented Person") +
+  theme(panel.grid.major.y = element_blank())
+```
+
+*Grouped bar charts* are groups of bar representing different subgroups of your primary independent variable, for example, if you wanted to see sales by category across several stores, or voter responses across several categories. Some things to consider when making grouped bar charts:
+
+* Order the bars consistently within your primary independent variable. This will likely lead to some jagged 
+
+* Grouped bars can be more desirable than stacked bars (described below) in cases where showing measurements of uncertainty/error is paramount; it is possible to add error bars or lines to grouped bars, but it isn't possible to do this with stacked bars.
+
+```{r groupedbars}
+
+plot_data <- tibble(voter = c(rep('Jim', 5), c(rep('Jam', 5)), c(rep('Jem', 5))),
+                    type = rep(letters[1:5], 3),
+                    Count = round(runif(15) * 10)) %>%
+  group_by(voter) %>%
+  mutate(total = sum(Count),
+         Proportion = Count/total) %>%
+  ungroup() %>%
+  mutate(voter = fct_reorder(voter, -total)) %>%
+  pivot_longer(cols = Count:Proportion) %>%
+  filter(name != 'total')
+
+ggplot(plot_data %>% filter(name == 'Count'), aes(x = voter, y = value, fill = type)) +
+  geom_bar(position = "dodge", stat = "identity", width = .5) +
+  labs(x = NULL, y = "Votes",
+       title = "Votes By Type, Across Voters")
+
+```
+
+
+Using *stacked bars* is another way to show proportions or counts of different cases across groups. If you're using stacked bars, please make sure to do the following:
+
+* Be clear about your ordinate. Stacked bars are often used to show both counts and proportions, and your audience is more likely to interpret your graph correctly with a little guidance.
+
+* Be consistent with ordering of within-bar groups, across your bars. Your audience is going to be confused if they have to search where colors are within stacks. If you're interested in showing how group rankings change over time or some other question that would require re-ordering, consider using a line graph instead.
+
+```{r stackedbars}
+
+ggplot(plot_data, aes(x = voter, y = value, fill = type)) +
+  geom_bar(position = "stack", stat = "identity", width = .5) +
+  facet_wrap(~name, scales = 'free') +
+  labs(x = NULL, y = NULL,
+       title = "Votes By Type, Across Voters", subtitle = "Vote Counts, and Proportion of Votes by Voter")
+```
+
+
+
+#### Scatterplots
+
+
+
+******
+
+# Emphasis And Message {#emphasis_message}
+
+A primary goal of data visualization is to communicate a message. To do that effectively, your data visualization needs several components, including: 
+
+* A clear, coherent message to communicate
+* A design strategy that emphasizes your message
+* A design strategy that reduces noise and other superfluous information
+
+The [`visR` collaboration team](http://openpharma.github.com/visR) developed a presentation, [Effective Visualizations for Credible,
+Data-Driven Decision Making](https://rstudio.com/assets/img/visR-Rviews-slides.pdf), with some useful ways to accomplish this. The headers and bullets below are taken directly from that presentation, with some additional commentary and exposition provided (by me) in the sub-bullets.
+
+### Have a clear purpose
+
+* Know the purpose of creating the graph
+  + Is the purpose of your graph to show that one group is different from other groups?
+  + Is it to show how a KPI has changed over time?
+  + Is it to show that there is a relationship between two metrics?
+  + If the purpose of your graph is to convince your audience that your data are complex or confusing, you might reconsider your approach - a simple statement can be a lot more efficient at communicating those points.
+  
+* Identify the quantitative evidence to support the purpose
+  + What aspects of your data - distributions, relationships, etc. - do you need to show to demonstrate that your message is accurate? You should highlight that.
+  + For instance, if the purpose of your graph is to show that Group A is different from Group B, your graph should highlight the evidence that supports this.
+  + Along the same lines, your graph should not include the 
+
+* Identify the audience and focus the design to support their needs
+  + See the [Audience](#audience) section for approaches to tailor your data visualization to your specific audience.
+
+### Show the data clearly
+* Avoid misrepresentation (use appropriate scales)
+* Choose the appropriate graph type to display your data
+  + See the section [Data Visualization Types](#dataviz_types) for more details on choosing the best type of visualization for your message and data.
+* Maximize data to ink ratio (reduce distraction, less is more)
+  + This is a point emphasized often by [Edward Tufte](https://en.wikipedia.org/wiki/Edward_Tufte).
+
+### Make the message obvious
+* Use proximity and alignment to aid in comparisons
+* Minimize mental arithmetic (e.g. plot the difference)
+* Use colors and annotations to highlight important details
+
+******
+
+# Combining Visualization Elements {#combining}
+
+It is common practice to combine multiple data visualizations, along with text, in order to create tools for monitoring, or further data exploration and analysis. The distinction between these two use cases is critically import, and merits giving each a separate name. 
+
+This guide will refer to tools for rapid monitoring as *"dashboards"*, which is in line with the definition put forward by Stephen Few in this [white paper](https://www.perceptualedge.com/articles/visual_business_intelligence/dboard_confusion_revisited.pdf). In contrast, this guide will refer to tools for data exploration and analysis as *"exploratory analytical tools"*, which should encompass everything Few includes in his definition of a "faceted analytical display." I think exploratory analytical tools is a better label because it includes the most common use case (exploratory analysis), and suggests interactivity more than passive observation.
+
+## Dashboards
+
+## Exploratory Analytical Tools
+
+******
+
+# Resources {#resources}
+
+There are a lot of useful resources for creating data visualizations, as well as for creating data visualization style guides. Here are a bunch that I found useful:
+
+* [CFPB Data Visualization Style Guide](https://cfpb.github.io/design-manual/data-visualization/data-visualization.html): This was the primary model for the current document's structure. Much of the content in the current document was drawn directly from the CFPB.
+
+* [Effective Visualizations for Credible,
+Data-Driven Decision Making](https://rstudio.com/assets/img/visR-Rviews-slides.pdf) is a presentation from Marc Vandemeulebroecke, Mark Baillie, Charlotta Früchtenicht and Diego Saldana
+on behalf of the [`visR` collaboration team](http://openpharma.github.com/visR), and succinctly outlines the importance of data visualization in decision making (from a pharmaceutical workflow perspective), as well as provides useful guidance on how to make visualizations more effective.
